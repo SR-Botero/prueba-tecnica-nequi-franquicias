@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: nequi-app
+
+  data:
+    mongodb:
+      uri: mongodb+srv://invitado:invitado@cluster0.7v42y.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+      database: franchises_db
