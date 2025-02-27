@@ -127,5 +127,8 @@ public class ProductController {
                 .then(Mono.just(new ResponseEntity<Void>(HttpStatus.NO_CONTENT)))
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 4462eae6686326503f757ab15a8560ee6b9bd42b
 }
