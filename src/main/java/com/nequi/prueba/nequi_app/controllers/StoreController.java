@@ -17,7 +17,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("/api/stores")
+@RequestMapping("api/stores")
 @RequiredArgsConstructor
 public class StoreController {
 

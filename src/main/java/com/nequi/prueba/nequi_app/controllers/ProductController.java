@@ -17,11 +17,11 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("/api/stores")
+@RequestMapping("api/products")
 @RequiredArgsConstructor
 public class ProductController {
 
-    private static final Logger logger = LoggerFactory.getLogger(StoreController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
 
     private final StoreService storeService;
 
@@ -127,8 +127,4 @@ public class ProductController {
                 .then(Mono.just(new ResponseEntity<Void>(HttpStatus.NO_CONTENT)))
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
-<<<<<<< HEAD
-
-=======
->>>>>>> 4462eae6686326503f757ab15a8560ee6b9bd42b
 }
