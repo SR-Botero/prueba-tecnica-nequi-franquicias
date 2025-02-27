@@ -16,7 +16,7 @@ public interface FranchiseService {
 
     Flux<Franchise> findAllFranchises();
 
-    Mono<List<ProductWithMostStockDTO>>findProductWithMaxStockByStore(String franchiseId);
+    Mono<List<ProductWithMostStockDTO>>findProductWithMostStockByStore(String franchiseId);
 
     Mono<Franchise> saveFranchise(FranchiseDTO franchiseDTO);
 
