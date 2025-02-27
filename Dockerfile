@@ -1,4 +1,4 @@
-# Se usa una imagen base con OpenJDK (Java 17, pero si usas otro puedes cambiarlo)
+# Se usa una imagen base con OpenJDK (Java 21)
 FROM openjdk:21-jdk-slim
 
 # Se añade la aplicación al contenedor
