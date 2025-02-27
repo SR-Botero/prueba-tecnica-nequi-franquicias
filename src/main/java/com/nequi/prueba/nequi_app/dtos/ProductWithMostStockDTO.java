@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Builder
-public class ProductWithMostStock {
+public class ProductWithMostStockDTO {
 
     private String storeNameDTO;
 
