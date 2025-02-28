@@ -1,10 +1,13 @@
 package com.nequi.prueba.nequi_app.controllers;
 
 import com.nequi.prueba.nequi_app.dtos.NewNameDTO;
+import com.nequi.prueba.nequi_app.dtos.NewStockDTO;
 import com.nequi.prueba.nequi_app.dtos.ProductDTO;
 import com.nequi.prueba.nequi_app.dtos.StoreDTO;
+import com.nequi.prueba.nequi_app.mappers.ProductMapper;
 import com.nequi.prueba.nequi_app.mappers.StoreMapper;
 import com.nequi.prueba.nequi_app.models.Store;
+import com.nequi.prueba.nequi_app.services.ProductService;
 import com.nequi.prueba.nequi_app.services.StoreService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,108 +26,88 @@ public class ProductController {
 
     private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
 
-    private final StoreService storeService;
+    private final ProductService productService;
 
-    private final StoreMapper storeMapper;
+    private final ProductMapper productMapper;
 
-    @GetMapping("/{storeId}")
-    public Mono<ResponseEntity<StoreDTO>> getStoreById(@PathVariable String storeId) {
+    @GetMapping("/{productId}")
+    public Mono<ResponseEntity<ProductDTO>> getProductById(@PathVariable String productId) {
 
-        logger.info("Request received to get store with ID: {}", storeId);
+        logger.info("Request received to get product with ID: {}", productId);
 
-        return storeService.findStoreById(storeId)
-                .map(store -> {
-                    logger.info("Store found with ID: {}", storeId);
+        return productService.findProductById(productId)
+                .map(product -> {
+                    logger.info("Product found with ID: {}", productId);
+                    ProductDTO productDTO = productMapper.productToProductDTO(product);
 
-                    return ResponseEntity.ok(storeMapper.storeToStoreDTO(store));
+                    return ResponseEntity.ok(productDTO);
                 })
 
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
     @GetMapping
-    public ResponseEntity<Flux<StoreDTO>> getAllStores() {
-        logger.info("Request received to get all stores");
+    public ResponseEntity<Flux<ProductDTO>> getAllProducts() {
 
-        Flux<StoreDTO> stores = storeService.findAllStores()
-                .map(store -> {
-                    logger.info("Store found with ID: {}", store.getId());
-                    return storeMapper.storeToStoreDTO(store);
-                });
+        logger.info("Request received to get all products");
 
-        return ResponseEntity.ok(stores);
+        Flux<ProductDTO> productDTOs = productService.findAllProducts()
+                .map(productMapper::productToProductDTO);
+
+        return ResponseEntity.ok(productDTOs);
     }
 
     @PostMapping
-    public Mono<ResponseEntity<StoreDTO>> createStore(@Valid @RequestBody StoreDTO storeDTO) {
+    public Mono<ResponseEntity<ProductDTO>> save(@Valid @RequestBody ProductDTO productDTO) {
 
-        logger.info("Request received to save a new store");
+        logger.info("Request received to save a new product");
+        return productService.saveProduct(productDTO)
+                .map(savedProductDTO -> {
+                    logger.info("Product saved with ID: {}", savedProductDTO.getIdDTO());
 
-        Store store = storeMapper.storeDTOToStore(storeDTO);
-
-        return storeService.saveStore(storeDTO)
-                .map(savedStore -> {
-                    logger.info("Store saved with ID: {}", savedStore.getIdDTO());
-
-                    return ResponseEntity.status(HttpStatus.CREATED).body(storeMapper.storeToStoreDTO(store));
+                    return ResponseEntity.status(HttpStatus.CREATED).body(savedProductDTO);
                 })
 
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/{storeId}/products")
-    public Mono<ResponseEntity<StoreDTO>> addProductToStore(@PathVariable String storeId, @Valid @RequestBody ProductDTO productDTO) {
+    @PutMapping("/{productId}/stock")
+    public Mono<ResponseEntity<ProductDTO>> updateStock(@PathVariable String productId, @Valid @RequestBody NewStockDTO newStockDTO) {
 
-        logger.info("Request received to add a product to store with ID: {}", storeId);
+        logger.info("Request received to update stock for product ID: {}", productId);
 
-        return storeService.saveProductToStore(storeId, productDTO)
-                .map(store -> {
-                    logger.info("Product added to store with ID: {}", storeId);
+        return productService.modifyProductStock(productId, newStockDTO)
+                .map(updatedStock -> {
+                    logger.info("Stock updated for product ID: {}", productId);
 
-                    return ResponseEntity.ok(storeMapper.storeToStoreDTO(store));
+                    return ResponseEntity.ok(ProductMapper.INSTANCE.productToProductDTO(updatedStock));
                 })
 
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping("/{storeId}/product/{productId}")
-    public Mono<ResponseEntity<StoreDTO>> deleteProductFromStore(@PathVariable String storeId, @PathVariable String productId) {
+    @PutMapping("/{productId}")
+    public Mono<ResponseEntity<ProductDTO>> updateProductName(@PathVariable String productId, @Valid @RequestBody NewNameDTO newNameDTO) {
 
-        logger.info("Request received to delete product with ID: {} from store with ID: {}", productId, storeId);
+        logger.info("Request received to update product name for ID: {}", productId);
 
-        return storeService.deleteProductFromStore(storeId, productId)
-                .map(store -> {
-                    logger.info("Product with ID: {} deleted from store with ID: {}", productId, storeId);
+        return productService.updateProductName(productId, newNameDTO)
+                .map(updatedName -> {
+                    logger.info("Product name updated for ID: {}", productId);
 
-                    return ResponseEntity.ok(storeMapper.storeToStoreDTO(store));
+                    return ResponseEntity.ok(ProductMapper.INSTANCE.productToProductDTO(updatedName));
                 })
 
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/{storeId}")
-    public Mono<ResponseEntity<StoreDTO>> updateStoreName(@PathVariable String storeId, @Valid @RequestBody NewNameDTO newNameDTO) {
+    @DeleteMapping("/{productId}")
+    public Mono<ResponseEntity<Void>> deleteProduct(@PathVariable String productId) {
 
-        logger.info("Request received to update store name for ID: {}", storeId);
+        logger.info("Request received to delete product with ID: {}", productId);
 
-        return storeService.updateStoreName(storeId, newNameDTO)
-                .map(store -> {
-                    logger.info("Store name updated for ID: {}", storeId);
-
-                    return ResponseEntity.ok(storeMapper.storeToStoreDTO(store));
-                })
-
-                .defaultIfEmpty(ResponseEntity.notFound().build());
-    }
-
-    @DeleteMapping("/{storeId}")
-    public Mono<ResponseEntity<Void>> deleteStoreById(@PathVariable String storeId) {
-
-        logger.info("Request received to delete store with ID: {}", storeId);
-
-        return storeService.deleteStoreById(storeId)
-                .then(Mono.fromRunnable(() -> logger.info("Store deleted successfully: {}", storeId)))
-                .then(Mono.just(new ResponseEntity<Void>(HttpStatus.NO_CONTENT)))
-                .defaultIfEmpty(ResponseEntity.notFound().build());
+        return productService.deleteProductById(productId)
+                .then(Mono.fromRunnable(() -> logger.info("Product deleted successfully: {}", productId)))
+                .then(Mono.just(ResponseEntity.noContent().build()));
     }
 }
