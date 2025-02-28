@@ -1,4 +1,4 @@
-# Prueba técnica - API Franquicias
+# Prueba técnica Nequi - API Franquicias 💻
 Este proyecto consiste en desarrollar una **API de gestión de franquicias**, permitiendo manejar una lista de franquicias, cada una con sus sucursales y productos. La API permitirá realizar operaciones CRUD sobre franquicias, sucursales y productos, además de consultas específicas sobre el stock de los productos por sucursal, buscar el producto con mas stock por sucursal para una franquicia puntal etc.
 ## Estructura del proyecto
 ```
