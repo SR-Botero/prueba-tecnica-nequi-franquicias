@@ -69,7 +69,7 @@ prueba-practica-backend-nequi/
 -   La asociación entre **Store** y **Product** también es unidireccional, donde Store puede acceder a Product, pero no al revés.
 
 **Importante:** En este diseño, los productos están embebidos dentro del documento de cada tienda, lo que significa que no existen como documentos independientes en una colección separada. Esto establece una relación unidireccional e independiente, donde los productos solo pertenecen a una tienda específica 
-# Guía de instalación
+# Guía de instalación 🔧
 ## Requisitos previos: 
 
  -  **Java 21 o superior**: Compilación y ejecución del proyecto.
@@ -139,7 +139,7 @@ Deberías ver la respuesta de tu aplicación en Spring Boot.
 Una vez que hayas confirmado que la aplicación está funcionando, puedes probar los endpoints de la API utilizando herramientas como Postman o cURL para asegurarte de que interactúan correctamente con MongoDB Atlas.
 
 
-# Buenas prácticas implementadas en el proyecto
+# Buenas prácticas implementadas en el proyecto ✅
 
 ## - Arquitectura en capas
 La arquitectura en capas es un enfoque de organización del código que divide la aplicación en distintas capas, cada una responsable de un aspecto específico.
